@@ -5,7 +5,7 @@
 ## 第一期范围
 
 - 默认模型：SiliconFlow `deepseek-ai/DeepSeek-V4-Flash`
-- 能力：coding、代码总结、bug 查找修改、文档总结
+- 能力：coding、代码总结、bug 查找修改、文档总结、代码审查、单元测试、Git 辅助、等价重构、SQL 分析
 - Ollama / vLLM：路由已写好，默认不使用。启用步骤见下文「接入 Ollama 或 vLLM」
 
 同一模型族在 SiliconFlow 目录里还有 `deepseek-ai/DeepSeek-V4-Flash-0731` 和 `deepseek-ai/DeepSeek-V4.1-Flash`。第一期按指定 id 使用 `deepseek-ai/DeepSeek-V4-Flash`。
@@ -37,7 +37,7 @@ DSH_HOME=/Users/haihuang.hh/PycharmProjects/dsh-platform/.dsh-home \
   --profile headless "用 code-summarize 总结当前仓库核心模块"
 ```
 
-## 四个 Skill
+## 九个 Skill
 
 | Skill | 做什么 | 不做什么 |
 |---|---|---|
@@ -45,6 +45,11 @@ DSH_HOME=/Users/haihuang.hh/PycharmProjects/dsh-platform/.dsh-home \
 | `code-summarize` | 总结结构、主路径、风险点 | 不改文件 |
 | `bug-fix` | 取证 → 根因 → 最小修复 | 没有证据不改 |
 | `doc-summarize` | 按原文提取结论和约束 | 不改原文、不补事实 |
+| `code-review` | 按严重程度审查 diff/文件并指出风险 | 不直接改代码、不乱报假阳性 |
+| `unit-test` | 按项目既有框架生成并验证单测 | 不擅改被测源码、不引入新测试库 |
+| `git-helper` | 基于实际 diff 生成 Commit/PR 描述 | 不编造测试结果、不擅自 push |
+| `refactor` | 保持外部契约不变做最小等价重构 | 不夹带业务变更、不改公开签名 |
+| `sql-analysis` | 对齐表结构、分区与口径编写/审查 SQL | 不盲猜字段、不漏分区、不擅改线上数据 |
 
 在对话里直接说「用 bug-fix 查这个报错」即可。dsh 会从 `$DSH_HOME/skills` 发现这些 Skill。
 
@@ -187,7 +192,7 @@ DSH_HOME=/Users/haihuang.hh/PycharmProjects/dsh-platform/.dsh-home \
 ```text
 config/settings.yaml   模型路由
 config/env.example     环境变量模板
-skills/*/SKILL.md      四个工作流
+skills/*/SKILL.md      九个工作流
 scripts/start.sh       同步配置并启动 dsh
 .dsh-home/             运行时数据，不入库
 ```
